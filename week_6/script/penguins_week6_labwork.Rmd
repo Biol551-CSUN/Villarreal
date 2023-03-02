@@ -1,0 +1,64 @@
+---
+title: "Lab Work of Penguins"
+author: "David Villarreal"
+date: "2023-03-02"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message= TRUE,
+                       warning =FALSE,
+                       fig.path= "../output/")
+```
+
+## *Libraries needed for plotting*
+```{r}
+library(tidyverse)
+library(palmerpenguins) #data library
+library(here)
+library(ggthemes) #used for plotting
+library(kableExtra) #used to create table
+```
+
+## *Data in use*
+```{r}
+glimpse(penguins)
+```
+
+
+
+## *Plotting amount of body mass by sex on different islands*
+
+
+```{r, fig.height= 5, fig.width= 8}
+penguins%>%
+  drop_na(sex) %>%   #removing any NA in data
+ggplot(aes(x= body_mass_g,
+           y= year))+ 
+  facet_grid(sex ~ species)+ #created a plot for each sex of the differnt species
+    geom_bin_2d()+
+  labs(x= "Body Mass (g)",
+       y= "Year",
+       title = "Body Mass (g) of different Penguin Species")+
+  theme(axis.text.x = element_text(size = 10, angle = 45), #changed the size of the x and y points and the angle
+        plot.title= element_text(size = 15)) #changed title size
+  
+```
+
+## *Table created*
+```{r}
+  penguins %>%
+  group_by(species) %>% #combined the columns to only show the different species
+  summarise(mass_mean= mean(body_mass_g, na.rm= TRUE))%>% #gained average body mass of species
+  kbl(col.names= c("Species", "Mean Body Mass (g)")) %>% #renamed top column
+  kable_classic() %>%
+  row_spec(2, bold= T, color= "yellow", background= "green") %>% #changed background color for row
+  kable_styling()
+  
+```
+
