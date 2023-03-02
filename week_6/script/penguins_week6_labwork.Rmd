@@ -35,7 +35,7 @@ glimpse(penguins)
 ## *Plotting amount of body mass by sex on different islands*
 
 
-```{r, fig.height= 5, fig.width= 8}
+```{r penguin_graph_labwork, fig.height= 5, fig.width= 8}
 penguins%>%
   drop_na(sex) %>%   #removing any NA in data
 ggplot(aes(x= body_mass_g,
