@@ -18,6 +18,7 @@ NChemData<- ChemData %>%
                names_to = "Time_on_Temp_impact", # the names of the new cols with all the column names
                values_to = "Values") %>%
   group_by(Tide, Time, Time_on_Temp_impact) %>%
+
   summarise(mean_vals = mean(Values, na.rm = TRUE)) %>%
   filter(Time_on_Temp_impact== "Temp_in")
 

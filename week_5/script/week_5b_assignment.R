@@ -25,7 +25,7 @@ inner_join(depth_data, new_con)%>%   ###combining data sets
              y= mean_temp))+ ##graphing by date and average temp
   geom_point(color="#AD7DE8")+
   geom_line(color= "#AD7DE8")+ ##using purple color
-  labs(x= "Time",
+  labs(x= "Time of January",
        y= "Average Temperature",
        title= "Average Temperature by Time")+ ##labeling x y and title
   theme_classic() ##changing background
@@ -33,6 +33,8 @@ inner_join(depth_data, new_con)%>%   ###combining data sets
   
 view(depth_with_con)
  
+ggsave(here("week_5","output","Time_to_AveTemp.png"),
+       width = 7, height = 5)
 
 
 
