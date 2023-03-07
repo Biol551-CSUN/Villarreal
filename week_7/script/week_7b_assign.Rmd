@@ -1,0 +1,71 @@
+---
+title: "BigFoot Spottings in America"
+author: "David"
+date: "2023-03-07"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message= TRUE,
+                       warning =FALSE,
+                       fig.path= "../output/")
+```
+
+## library
+```{r}
+library(tidyverse)
+library(here)
+library(maps)
+library(mapdata)
+library(mapproj)
+library(kableExtra)
+```
+
+## Manually inputting data
+
+```{r}
+bigfoot <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-09-13/bigfoot.csv')
+
+glimpse(bigfoot)
+```
+
+
+##  filtered data
+
+Bigfoot data filtered to get rid of Alaska plots, unknown seasons, and outliers due to false data points.
+
+```{r pressure, echo=FALSE}
+filtered_bigfoot <- bigfoot%>%
+  drop_na(latitude,
+          season) %>%
+  filter(state != "Alaska",
+         season != "Unknown",
+         longitude > -140)
+```
+
+
+## plotted data
+```{r}
+glimpse(filtered_bigfoot)
+states <- map_data("state")
+ggplot()+
+  geom_polygon(data= states,
+               aes(x= long,
+                   y= lat, 
+                   group= group,
+                   fill = region))+
+  geom_point(data= filtered_bigfoot,
+             aes(x= longitude,
+                 y= latitude),
+             color="black",
+             alpha = 0.5)+
+  facet_wrap(~season)+
+  labs(x= "Longitude",
+       y= "Laditude",
+       title= "Sight Spottings of Bigfoot in America Excluding Alaska")+
+  theme(legend.position = "none")
+```
