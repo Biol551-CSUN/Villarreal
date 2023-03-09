@@ -16,6 +16,7 @@ knitr::opts_chunk$set(echo = TRUE,
 ```
 
 ## library
+libraries used
 ```{r}
 library(tidyverse)
 library(here)
@@ -26,8 +27,9 @@ library(kableExtra)
 ```
 
 ## Manually inputting data
-
+import data set of bigfoot
 ```{r}
+
 bigfoot <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-09-13/bigfoot.csv')
 
 glimpse(bigfoot)
@@ -49,23 +51,24 @@ filtered_bigfoot <- bigfoot%>%
 
 
 ## plotted data
+plot of bigfoot sightings in USA excluding Alaska
 ```{r}
 glimpse(filtered_bigfoot)
-states <- map_data("state")
+states <- map_data("state") ##import US map
 ggplot()+
-  geom_polygon(data= states,
+  geom_polygon(data= states, #data using for map
                aes(x= long,
                    y= lat, 
                    group= group,
-                   fill = region))+
-  geom_point(data= filtered_bigfoot,
+                   fill = region))+ ##coloring states
+  geom_point(data= filtered_bigfoot,  #bigfoot data to go into map
              aes(x= longitude,
                  y= latitude),
-             color="black",
-             alpha = 0.5)+
-  facet_wrap(~season)+
-  labs(x= "Longitude",
-       y= "Laditude",
-       title= "Sight Spottings of Bigfoot in America Excluding Alaska")+
+             color="black",  #creating black marks for spots location od sightings 
+             alpha = 0.5)+  #make the marks transparent
+  facet_wrap(~season)+  #create different graphs by seasons
+  labs(x= "Longitude", #rename x axes
+       y= "Laditude", #rename y axes
+       title= "Sight Spottings of Bigfoot in America Excluding Alaska")+ #change title
   theme(legend.position = "none")
 ```
