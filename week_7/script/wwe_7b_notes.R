@@ -28,7 +28,7 @@ head(states)
 # get data for counties
 counties<-map_data("county")
 head(counties)
-
+view(world)
 ggplot()+
   geom_polygon(data= world,
                aes(x= long,

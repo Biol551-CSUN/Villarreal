@@ -1,0 +1,105 @@
+---
+title: "Good plot/ Bad plot"
+author: "Cameron, David, Mikayla, Rachel"
+date: "2023-03-27"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message= TRUE,
+                       warning =FALSE,
+                       fig.path= "../output/")
+```
+
+## Library
+```{r}
+library(tidyverse)
+library(here)
+library(ggthemes)
+library(kableExtra)
+library(magrittr)
+library(ggplot2)
+library(dplyr)
+library(waffle)
+library(maps)
+library(mapdata)
+library(mapproj)
+
+```
+
+
+# Data
+```{r}
+pizza <- read.csv("https://query.data.world/s/nwyktjpwoliijgyckzy5kuunkvzxkb?dws=00000", header=TRUE, stringsAsFactors=FALSE)
+
+glimpse(pizza)
+
+cut_pizza <- pizza%>%
+  filter(longitude > -140,
+         latitude > 25)%>%
+  mutate(total_provinces = n_distinct(province))
+```
+
+
+
+
+## *Bad plot*
+
+
+```{r}
+cut_pizza%>%
+  ggplot(aes(x = province,
+             y = total_provinces))+
+  geom_bar(stat="identity")+
+  labs(x="state",
+       y="pizza restaraunts")+
+  theme_dark()
+
+```
+
+### Why is this graph bad?
+- x-axis and y-axis titles are broad
+- graph is hard to see with theme background
+- hard to read labels on the x-axis
+
+
+
+
+
+
+
+
+
+# *Good plot*
+
+```{r}
+states <- map_data("state") ##import US map
+  ggplot()+
+  geom_polygon(data= states, #data using for map
+               aes(x= long,
+                   y= lat, 
+                   group= group,
+                   fill = region))+
+    geom_point(data= cut_pizza,  #cut_pizza data to go into map
+               aes(x= longitude,
+                   y= latitude),
+               color="black",  #creating black marks for spots location od sightings 
+               alpha = 0.5,
+               size=0.5) +
+    theme(panel.background = element_rect(fill = "lightblue"))+
+    guides(fill = FALSE)+
+    labs(x="Latitude",
+         y="Longitude",
+         title= "Pizza restaurant locations in each state")
+```
+
+
+### How is this a good plot
+- Plots are transparent in each area
+- Background looks like water
+- Outcast data was filtered out, so no plots outside of the US was in the map
+- States are separated by color
