@@ -1,0 +1,64 @@
+---
+title: "week 8 lab"
+author: "Cameron, David, Mikayla, Rachel"
+date: "2023-04-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## library
+```{r}
+library(tidyverse)
+library(here)
+library(maps)
+library(mapdata)
+library(mapproj)
+```
+
+# Data
+```{r }
+ChemData<-read_csv(here("week_9","data", "chemicaldata_maunalua.csv"))
+
+glimpse(ChemData)
+```
+
+## acidity function
+
+
+```{r }
+#ChemData %>%
+#if(pH<7,0) {
+  #pH_level <- base
+  #} else {
+   # pH_level <- acidic
+   # }
+  
+```
+
+## graph
+
+```{r}
+pH_plot <- function(data=ChemData, x, y, line= TRUE) {
+if(line==TRUE){
+  ggplot(aes(x= Phosphate,
+             y= pH_plot()))+ ##graphing by phosphate impact on pH 
+  geom_line(color= "#AD7DE8")+
+  geom_point()+
+  geom_smooth()
+}
+else{
+  ggplot(aes(x= Phosphate,
+             y= pH))+ ##graphing by phosphate impact on pH
+  geom_line(color= "#AD7DE8")+
+  geom_point()+
+  geom_smooth()
+}
+}
+pH_plot(x= Phosphate, y=pH)
+```
+
+
+
