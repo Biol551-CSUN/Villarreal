@@ -29,35 +29,45 @@ glimpse(ChemData)
 
 
 ```{r }
-#ChemData %>%
-#if(pH<7,0) {
-  #pH_level <- base
-  #} else {
-   # pH_level <- acidic
-   # }
-  
+pH_level <- function(pH){ 
+if(pH<7.0) {
+  pH_level <- "acidic"
+  } 
+  else if (pH>7.0) {
+    pH_level <- "basic"
+  }
+  else if (pH==7.0) {
+    pH_level <- "neutral"
+  } 
+  return(pH_level)
+}
+pH_level(6)
+pH_level(9)
+pH_level(7)
 ```
 
 ## graph
 
 ```{r}
-pH_plot <- function(data=ChemData, x, y, line= TRUE) {
+pH_plot <- function(data, x, y, line= TRUE) {
 if(line==TRUE){
-  ggplot(aes(x= Phosphate,
-             y= pH_plot()))+ ##graphing by phosphate impact on pH 
+  ggplot(data= data,
+         aes(x= {{x}},
+             y= {{y}}))+ ##graphing by phosphate impact on pH 
   geom_line(color= "#AD7DE8")+
   geom_point()+
   geom_smooth()
 }
 else{
-  ggplot(aes(x= Phosphate,
-             y= pH))+ ##graphing by phosphate impact on pH
+  ggplot(data= data,
+         aes(x= {{x}},
+             y= {{y}}))+ ##graphing by phosphate impact on pH
   geom_line(color= "#AD7DE8")+
   geom_point()+
   geom_smooth()
 }
 }
-pH_plot(x= Phosphate, y=pH)
+pH_plot(data=ChemData, x= Phosphate, y=pH)
 ```
 
 

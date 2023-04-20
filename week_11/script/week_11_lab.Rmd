@@ -1,0 +1,47 @@
+---
+title: "Lab assignment on manipulating code"
+author: "David"
+date: "2023-04-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Library
+```{r}
+library(tidyverse)
+library(here)
+```
+
+# Data
+
+```{r}
+inter_data <- read_csv(here("week_11","data","intertidaldata.csv")) #import of data
+
+```
+# Fixing Data
+```{r}
+inter_new <- inter_data%>%
+  mutate(Quadrat= str_replace(Quadrat, "\\.", " "), #remove the dot in Quadrat
+         Quadrat=str_replace(Quadrat, "\\d", " "), #removing number in Quadrat column
+         Quadrat= str_trim(Quadrat))%>% #removal of white spaces in Quadrat
+  mutate(Quadrat=factor(Quadrat, levels=c("Low", "Mid", "High"))) #reorder from low to mid to high
+                        
+
+```
+
+# Plots
+
+```{r pressure, echo=FALSE}
+inter_new%>%
+  ggplot(aes(x=(Quadrat), #x axis
+             y=Algae))+ #y axis
+  geom_col()+
+theme_classic()+ #change theme
+  labs(x= "Quadrat Level",
+       y= "Amount of Algae",
+       title= "Change in algae size in different quadrat levels") #changing titles
+```
+
+
