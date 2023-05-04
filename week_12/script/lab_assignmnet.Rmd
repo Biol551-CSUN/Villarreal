@@ -1,0 +1,86 @@
+---
+title: "loop lab"
+author: "David"
+date: "2023-04-25"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#library
+```{r}
+library(tidyverse)
+library(here)
+
+```
+
+## Data input
+
+
+
+```{r }
+con_data<-here("Week_12", "data", "cond_data")
+files <- dir(path = con_data,pattern = ".csv")
+files
+new_con <- data.frame(matrix(nrow=length(files),ncol= 5))
+colnames(new_con) <- c("filename", "mean_temp", "sd_temp", "mean_light", "sd_light")
+
+```
+
+
+
+
+# means and standard deviation
+```{r}
+
+
+for(i in 1:length(files)){
+  raw_data<-read_csv(paste0(con_data,"/",files[1])) # test by reading in the first file and see if it works
+  new_con$filename[i] <- files[i]
+new_con$mean_temp[i] <- mean(raw_data$Temperature, na.rm = TRUE)
+new_con$mean_light[i] <- mean(raw_data$Salinity, na.rm= TRUE)
+
+
+new_con$sd_temp[i]<- sd(raw_data$Temperature, na.rm = TRUE) # calculate a mean
+new_con$sd_light[i] <- sd(raw_data$Salinity, na.rm= TRUE)
+}
+```
+
+## filtering data
+
+```{r}
+
+map_Path<-here("week_12", "data", "cond_data") # create path
+map_files <- dir(path = con_data, pattern = ".csv", full.names = TRUE) #create pattern with full path names
+```
+
+```{r}
+map_data <- map_files %>%
+ set_names()%>% # set's the id of each list to the file name
+ map_df(read_csv,.id = "con_data") %>% # map everything to a dataframe and put the id in a column called filename
+ group_by(con_data) %>% # group by con_data file name 
+ summarise(mean_temp = mean(Temp.C, na.rm = TRUE),
+           mean_light = mean(salinity, na.rm = TRUE),
+           sd_temp = sd(Temp.C, na.rm = TRUE),
+           sd_light = sd(Salinity, na.rm = TRUE)) # standard deviation of light and temp 
+
+
+
+```
+
+---------
+Next, we read in the files using map instead of using a for loop
+```{r}
+HW_map_data <- HW_map_files %>% # assign new value to directory
+  set_names() %>% #set's the id for each file
+  map_df(read_csv, .id = "filename") %>% #map everything to dataframe and put id in filename column
+  group_by(filename) %>% # group by filenames
+  summarise(mean_temp = mean(Temp.C, na.rm = TRUE), # compute mean temp
+            mean_light = mean(Intensity.lux,na.rm = TRUE), # compute mean light
+            stdev_temp = sd(Temp.C, na.rm = TRUE), # compute stdev temp
+            stdev_light = sd(Intensity.lux, na.rm = TRUE)) # compute stdev light
+
+HW_map_data
+```
